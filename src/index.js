@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import dotenvFlow from 'dotenv-flow';
 import initWebRoutes from './routes/web';
 import viewEngine from './config/viewEngine';
+import connectDB from './config/connectDB';
 
 dotenvFlow.config();
 
@@ -23,6 +24,9 @@ app.use(cors());
 
 viewEngine(app);
 initWebRoutes(app);
+
+// connect to DB
+connectDB();
 
 const server = app.listen(port, () => {
     console.log(`App listening on port ${port}`);
