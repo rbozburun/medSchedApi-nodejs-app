@@ -47,14 +47,14 @@ let createNewUser = (data) => {
             await db.User.create({
                 email: data.email,
                 password: hashPassword,
-                gender: data.gender === '1' ? true : false,
+                gender: data.gender,
                 firstName: data.firstName,
                 lastName: data.lastName,
                 address: data.address,
                 phoneNumber: data.phoneNumber,
-                roleId: data.roleId,
-                positionId: data.positionId,
-                image: data.image,
+                roleId: data.role,
+                positionId: data.position,
+                image: data.avatar,
             });
             resolve({
                 errCode: 0,
@@ -201,4 +201,22 @@ let deleteUser = (id) => {
     });
 };
 
-module.exports = { createNewUser, getAllUsers, updateUserData, deleteUser, login };
+let getAllCodeServices = (type) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let response = {};
+            if (!type) {
+                response.errCode = 1;
+                response.message = 'Missing required parameter. Please check again!';
+            }
+            let allCode = await db.Allcode.findAll({ where: { type: type } });
+            response.errCode = 0;
+            response.data = allCode;
+            resolve(response);
+        } catch (err) {
+            reject(err);
+        }
+    });
+};
+
+module.exports = { createNewUser, getAllUsers, updateUserData, deleteUser, login, getAllCodeServices };

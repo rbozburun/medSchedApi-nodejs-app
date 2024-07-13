@@ -64,10 +64,31 @@ const deleteUser = async (req, res) => {
     }
 };
 
+const getAllCode = async (req, res) => {
+    try {
+        let type = req.query.type;
+        if (!type) {
+            return res.status(200).json({
+                errCode: 1,
+                message: 'Missing required parameter. Please check again!',
+            });
+        }
+        let data = await UserService.getAllCodeServices(type);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log('Error getAllCode: ', error);
+        return res.status(200).json({
+            errCode: -1,
+            message: 'Error from server',
+        });
+    }
+};
+
 module.exports = {
     createUser,
     getAllUsers,
     updateUser,
     deleteUser,
     handleLogin,
+    getAllCode,
 };
