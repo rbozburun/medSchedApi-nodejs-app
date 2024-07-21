@@ -18,19 +18,36 @@ const handleLogin = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
     let id = req.query.id; //All / Id
+    let page = parseInt(req.query.page);
+    let per_page = parseInt(req.query.per_page);
+
     if (!id) {
         return res.status(200).json({
             errCode: 1,
             message: 'Missing required parameter! Please check again!',
             data: [],
         });
+    } else {
     }
-    let users = await UserService.getAllUsers(id);
-    return res.status(200).json({
-        errCode: 0,
-        message: 'OK',
-        data: users,
-    });
+    if (id && page && per_page) {
+        let users = await UserService.getAllUsers(id, page, per_page);
+        return res.status(200).json({
+            errCode: 0,
+            message: 'OK',
+            total: users.count,
+            per_page: per_page,
+            page: page,
+            total_pages: Math.ceil(users.count / per_page),
+            data: users.rows,
+        });
+    } else if (id && !page && !per_page) {
+        let users = await UserService.getAllUsers(id);
+        return res.status(200).json({
+            errCode: 0,
+            message: 'OK',
+            data: users,
+        });
+    }
 };
 
 const createUser = async (req, res) => {

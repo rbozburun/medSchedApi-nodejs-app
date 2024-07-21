@@ -6,7 +6,7 @@ let salt = bcrypt.genSaltSync(10);
 let hashUserPassword = (password) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const hash = await bcrypt.hashSync(password, salt);
+            const hash = await bcrypt.hashSync(password.trim(), salt);
             resolve(hash);
         } catch (error) {
             reject(error);
@@ -45,16 +45,16 @@ let createNewUser = (data) => {
             }
             let hashPassword = await hashUserPassword(data.password);
             await db.User.create({
-                email: data.email,
+                email: data.email.trim(),
                 password: hashPassword,
                 gender: data.gender,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                address: data.address,
-                phoneNumber: data.phoneNumber,
-                roleId: data.role,
-                positionId: data.position,
-                image: data.avatar,
+                firstName: data.firstName && data.firstName.trim(),
+                lastName: data.lastName && data.lastName.trim(),
+                address: data.address && data.address.trim(),
+                phoneNumber: data.phoneNumber && data.phoneNumber.trim(),
+                roleId: data.role && data.role,
+                positionId: data.position && data.position,
+                image: data.avatar && data.avatar,
             });
             resolve({
                 errCode: 0,
@@ -106,17 +106,31 @@ let login = (data) => {
     });
 };
 
-let getAllUsers = (userId) => {
+let getAllUsers = (userId, page, per_page) => {
     return new Promise(async (resolve, reject) => {
         try {
-            let users = '';
-            if (userId && userId === 'ALL') {
+            let users = {};
+            const offset = (page - 1) * per_page;
+
+            if (userId && page && per_page && userId === 'ALL') {
+                users = await db.User.findAndCountAll({
+                    offset,
+                    limit: per_page,
+                    attributes: {
+                        exclude: ['password'],
+                    },
+                    order: [['id', 'DESC']],
+                });
+            }
+
+            if (userId && !page && !per_page && userId === 'ALL') {
                 users = await db.User.findAll({
                     attributes: {
                         exclude: ['password'],
                     },
                 });
             }
+
             if (userId && userId !== 'ALL') {
                 users = await db.User.findOne({
                     where: {
@@ -127,6 +141,7 @@ let getAllUsers = (userId) => {
                     },
                 });
             }
+            console.log(users);
             resolve(users);
         } catch (error) {
             reject(error);
