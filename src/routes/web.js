@@ -17,6 +17,11 @@ let initWebRoutes = (app) => {
     router.get('/api/get-all-code', userController.getAllCode);
 
     router.get('/api/get-top-doctor', doctorController.getTopDoctor);
+    router.get('/api/get-all-doctors', doctorController.getAllDoctors);
+    router.get('/api/get-doctor', doctorController.getDoctorById);
+    router.post('/api/post-info-doctor', doctorController.postInfoDoctor);
+    router.post('/api/create-schedule-time', doctorController.createScheduleTime);
+    router.get('/api/get-schedule-time', doctorController.getScheduleTime);
 
     return app.use('/', router);
 };
