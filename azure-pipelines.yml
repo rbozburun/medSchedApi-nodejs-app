@@ -18,6 +18,7 @@ steps:
   inputs:
     applicationType: 'other'
     buildAnalyzerParams: '-exclude ./node_modules/*'
+    fortifySourceTranslate: './*'
     fortifyBuildId: 'nodejs-project-backend'
     scaVerbose: true
     scaDebug: true
