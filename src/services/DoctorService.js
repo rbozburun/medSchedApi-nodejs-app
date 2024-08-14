@@ -161,10 +161,87 @@ const getDoctorById = (doctorId) => {
                         as: 'markdownData',
                         attributes: ['description', 'contentHtml', 'contentMarkdown'],
                     },
+                    {
+                        model: db.DoctorInfo,
+                        as: 'doctorInfoData',
+                        attributes: {
+                            exclude: ['id', 'doctorId', 'createdAt', 'updatedAt'],
+                        },
+                        include: [
+                            { model: db.Allcode, as: 'priceData', attributes: ['valueEn', 'valueVi'] },
+                            { model: db.Allcode, as: 'paymentData', attributes: ['valueEn', 'valueVi'] },
+                            { model: db.Allcode, as: 'provinceData', attributes: ['valueEn', 'valueVi'] },
+                        ],
+                    },
                 ],
                 raw: true,
                 nest: true,
             });
+            if (!doctorData) {
+                doctorData: {
+                }
+            }
+            resolve({
+                errCode: 0,
+                data: doctorData,
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+const getProfileDoctorById = (doctorId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let doctorData = await db.User.findOne({
+                where: { id: doctorId },
+                attributes: ['image', 'firstName', 'lastName'],
+                include: [
+                    {
+                        model: db.DoctorInfo,
+                        as: 'doctorInfoData',
+                        attributes: ['addressClinic'],
+                        include: [{ model: db.Allcode, as: 'priceData', attributes: ['valueEn', 'valueVi'] }],
+                    },
+                    { model: db.Allcode, as: 'positionData', attributes: ['valueEn', 'valueVi'] },
+                ],
+                raw: true,
+                nest: true,
+            });
+            if (!doctorData) {
+                doctorData = {};
+            }
+            resolve({
+                errCode: 0,
+                data: doctorData,
+            });
+        } catch (err) {
+            reject(err);
+        }
+    });
+};
+
+const getExtraInfoDoctorById = (doctorId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let doctorData = await db.DoctorInfo.findOne({
+                where: { id: doctorId },
+                attributes: {
+                    exclude: ['id', 'doctorId', 'createdAt', 'updatedAt'],
+                },
+                include: [
+                    { model: db.Allcode, as: 'priceData', attributes: ['valueEn', 'valueVi'] },
+                    { model: db.Allcode, as: 'paymentData', attributes: ['valueEn', 'valueVi'] },
+                    { model: db.Allcode, as: 'provinceData', attributes: ['valueEn', 'valueVi'] },
+                ],
+                raw: true,
+                nest: true,
+            });
+            if (!doctorData) {
+                doctorData: {
+                }
+            }
             resolve({
                 errCode: 0,
                 data: doctorData,
@@ -255,4 +332,13 @@ const getScheduleTime = (doctorId, date) => {
         }
     });
 };
-module.exports = { getTopDoctor, getAllDoctors, postInfoDoctor, getDoctorById, createScheduleTime, getScheduleTime };
+module.exports = {
+    getTopDoctor,
+    getAllDoctors,
+    postInfoDoctor,
+    getDoctorById,
+    getProfileDoctorById,
+    createScheduleTime,
+    getScheduleTime,
+    getExtraInfoDoctorById,
+};

@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import db from '../models';
+import EmailService from './EmailService';
 
 let salt = bcrypt.genSaltSync(10);
 
@@ -26,6 +27,29 @@ let checkEmail = (email) => {
                 resolve(true);
             } else {
                 resolve(false);
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
+let sendOtpCode = (email) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let isExistEmail = await checkEmail(email);
+            if (isExistEmail) {
+                resolve({
+                    errCode: 1,
+                    message: 'Your email is already in used. Please try another!',
+                });
+            } else {
+                let data = await EmailService.sendOTPEmail(email);
+                console.log(data);
+                resolve({
+                    errCode: 0,
+                    message: 'Send opt code successfully!',
+                });
             }
         } catch (error) {
             reject(error);
@@ -234,4 +258,13 @@ let getAllCodeServices = (type) => {
     });
 };
 
-module.exports = { createNewUser, getAllUsers, updateUserData, deleteUser, login, getAllCodeServices };
+module.exports = {
+    createNewUser,
+    getAllUsers,
+    updateUserData,
+    deleteUser,
+    login,
+    getAllCodeServices,
+    checkEmail,
+    sendOtpCode,
+};

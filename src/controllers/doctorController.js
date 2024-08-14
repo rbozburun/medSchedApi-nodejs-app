@@ -66,6 +66,46 @@ const getDoctorById = async (req, res) => {
     }
 };
 
+const getProfileDoctorById = async (req, res) => {
+    try {
+        let doctorId = +req.query.id;
+        if (!doctorId) {
+            return res.status(200).json({
+                errCode: 1,
+                message: 'Missing required parameter',
+            });
+        }
+        let doctorData = await DoctorService.getProfileDoctorById(doctorId);
+        return res.status(200).json(doctorData);
+    } catch (error) {
+        console.log('Error getProfileDoctorById', error);
+        return res.status(200).json({
+            errCode: -1,
+            message: 'Error from server',
+        });
+    }
+};
+
+const getExtraInfoDoctorById = async (req, res) => {
+    try {
+        let doctorId = +req.query.id;
+        if (!doctorId) {
+            return res.status(200).json({
+                errCode: 1,
+                message: 'Missing required parameter',
+            });
+        }
+        let doctorData = await DoctorService.getExtraInfoDoctorById(doctorId);
+        return res.status(200).json(doctorData);
+    } catch (error) {
+        console.log('Error getExtraInfoDoctorById', error);
+        return res.status(200).json({
+            errCode: -1,
+            message: 'Error from server',
+        });
+    }
+};
+
 const createScheduleTime = async (req, res) => {
     try {
         let data = req.body;
@@ -110,6 +150,8 @@ module.exports = {
     postInfoDoctor,
     getDoctorById,
     getDoctorById,
+    getProfileDoctorById,
     createScheduleTime,
     getScheduleTime,
+    getExtraInfoDoctorById,
 };

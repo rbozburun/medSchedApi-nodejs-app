@@ -16,6 +16,18 @@ const handleLogin = async (req, res) => {
     });
 };
 
+const sendOtpCode = async (req, res) => {
+    let email = req.body.email;
+    if (!email) {
+        return res.status(200).json({
+            errCode: 1,
+            message: 'Missing required parameter! Please check again!',
+        });
+    }
+    let response = await UserService.sendOtpCode(email);
+    return res.status(200).json(response);
+};
+
 const getAllUsers = async (req, res) => {
     let id = req.query.id; //All / Id
     let page = parseInt(req.query.page);
@@ -108,4 +120,5 @@ module.exports = {
     deleteUser,
     handleLogin,
     getAllCode,
+    sendOtpCode,
 };
