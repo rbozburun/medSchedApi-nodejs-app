@@ -22,4 +22,3 @@ steps:
     scaVerbose: true
     scaDebug: true
     fortifyScanType: 'LocalScan'
-    additionalScanParams: '-f C:\azure-agent-3.238.0\output-nodejs.fpr'
