@@ -17,9 +17,9 @@ steps:
 - task: FortifyScanCentralSAST@7
   inputs:
     scanCentralCtrlUrl: 'https://fortify.cw:4443/scancentral-ctrl'
-    scanCentralClientToken: '$(ScanCentral.ClientToken)'
+    scanCentralClientToken: '$(Unified)'
     sscUrl: 'https://fortify.cw:8443/ssc'
-    sscCiToken: '$(ScanCentral.SscCiToken)'
+    sscCiToken: '$(Unified)'
     buildTool: 'none'
     includeNodeModules: false
     pythonVersion: '3'
