@@ -10,9 +10,9 @@ pool: Default
 
 steps:
 
-- script: |
-    npm install
-    displayName: 'npm install '
+# - script: |
+#    npm install
+#    displayName: 'npm install '
 
 - task: FortifyScanCentralSAST@7
   inputs:
