@@ -1,0 +1,33 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pool: Default
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- script: |
+    npm install
+  displayName: 'npm install'
+
+- task: dependency-check-build-task@6
+  inputs:
+    projectName: 'test'
+    scanPath: './*'
+    format: 'HTML'
+    uploadReports: true
+    enableVerbose: true
+
+- task: Gitleaks@2
+  inputs:
+    scanlocation: '$(Build.SourcesDirectory)'
+    configtype: 'default'
+    taskfail: false
+    reportformat: 'sarif'
+    reportname: 'GitLeaksReport'
