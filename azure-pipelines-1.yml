@@ -23,3 +23,10 @@ steps:
     buildTool: 'none'
     includeNodeModules: false
     pythonVersion: '3'
+
+    - task: FortifySCA@7
+      inputs:
+        applicationType: 'dotnet'
+        fortifyProjects: '**\*.sln'
+        fortifyBuildId: 'test'
+        fortifyScanType: 'LocalScan'
