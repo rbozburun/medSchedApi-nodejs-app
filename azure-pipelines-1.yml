@@ -14,16 +14,6 @@ steps:
 #    npm install
 #    displayName: 'npm install '
 
-- task: FortifyScanCentralSAST@7
-  inputs:
-    scanCentralCtrlUrl: 'https://fortify.cw:4443/scancentral-ctrl'
-    scanCentralClientToken: '$(ClientAuth)'
-    sscUrl: 'https://fortify.cw:8443/ssc'
-    sscCiToken: '$(Unified)'
-    buildTool: 'none'
-    includeNodeModules: false
-    pythonVersion: '3'
-
 
 - task: FortifySCA@7
   inputs:
